@@ -1,0 +1,131 @@
+# Clash 配置文件
+# 端口设置
+port: 7890                # HTTP 代理端口
+socks-port: 7891          # SOCKS5 代理端口
+mixed-port: 7892          # 混合端口（同时支持 HTTP 和 SOCKS5）
+allow-lan: true           # 允许局域网连接
+mode: rule                # 规则模式
+log-level: info           # 日志级别
+
+# DNS 设置
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    - 8.8.8.8
+  fallback:
+    - 1.1.1.1
+    - 8.8.4.4
+
+# 代理节点配置
+proxies:
+  # VLESS-XHTTP-Reality 节点
+  - name: "vless-xhttp-reality"
+    type: vless
+    server: 15.152.222.9
+    port: 12856
+    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    network: xhttp
+    tls: true
+    udp: true
+    xhttp-opts:
+      path: /dece9f98-9f81-411d-a8dc-f91a29695317-xh
+      mode: auto
+    reality-opts:
+      public-key: xPg_Yhx46nXfWEKHmr2eUEA8jPGpTRxo6TIjoM7NGw8
+      short-id: f6553ca4
+    client-fingerprint: chrome
+    servername: www.amd.com
+
+  # VLESS-Reality-Vision 节点
+  - name: "vless-reality-vision"
+    type: vless
+    server: 15.152.222.9
+    port: 59975
+    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    network: tcp
+    tls: true
+    udp: true
+    flow: xtls-rprx-vision
+    reality-opts:
+      public-key: xPg_Yhx46nXfWEKHmr2eUEA8jPGpTRxo6TIjoM7NGw8
+      short-id: f6553ca4
+    client-fingerprint: chrome
+    servername: www.amd.com
+
+  # VMess-WS 节点
+  - name: "vmess-ws"
+    type: vmess
+    server: 15.152.222.9
+    port: 65140
+    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    alterId: 0
+    cipher: auto
+    udp: true
+    network: ws
+    ws-opts:
+      path: /dece9f98-9f81-411d-a8dc-f91a29695317-vm?ed=2048
+      headers:
+        Host: www.bing.com
+
+  # Hysteria2 节点
+  - name: "hysteria2"
+    type: hysteria2
+    server: 15.152.222.9
+    port: 57240
+    password: dece9f98-9f81-411d-a8dc-f91a29695317
+    alpn:
+      - h3
+    sni: www.bing.com
+    skip-cert-verify: true
+    up: "30 Mbps"
+    down: "100 Mbps"
+
+  # TUIC 节点
+  - name: "tuic"
+    type: tuic
+    server: 15.152.222.9
+    port: 53719
+    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    password: dece9f98-9f81-411d-a8dc-f91a29695317
+    alpn:
+      - h3
+    congestion-controller: bbr
+    udp-relay-mode: native
+    sni: www.bing.com
+    skip-cert-verify: true
+
+# 代理组配置
+proxy-groups:
+  # 手动选择节点组
+  - name: "🚀 节点选择"
+    type: select
+    proxies:
+      - vless-xhttp-reality
+      - vless-reality-vision
+      - vmess-ws
+      - hysteria2
+      - tuic
+      - DIRECT
+
+# 规则配置
+rules:
+  # 局域网地址直连
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  
+  # 中国大陆域名直连
+  - GEOSITE,cn,DIRECT
+  
+  # 中国大陆 IP 直连
+  - GEOIP,CN,DIRECT
+  
+  # 其他所有流量走代理
+  - MATCH,🚀 节点选择

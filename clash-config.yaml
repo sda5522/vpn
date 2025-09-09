@@ -105,6 +105,8 @@ proxy-groups:
       - "vm-ws-aws"
       - "hy2-aws"
       - "tuic-aws"
+      - "anytls-aws"
+      - "any-reality-aws"
       - DIRECT
 
 # 规则配置（极简版）

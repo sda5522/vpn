@@ -1,97 +1,92 @@
-# Clash 配置文件
+# Clash 配置文件 - 极简版
 # 端口设置
-port: 7890                # HTTP 代理端口
-socks-port: 7891          # SOCKS5 代理端口
-mixed-port: 7892          # 混合端口（同时支持 HTTP 和 SOCKS5）
-allow-lan: true           # 允许局域网连接
-mode: rule                # 规则模式
-log-level: info           # 日志级别
+port: 7890          # HTTP 代理端口
+socks-port: 7891    # SOCKS5 代理端口
+mixed-port: 7892    # 混合端口（同时支持 HTTP 和 SOCKS5）
+allow-lan: true     # 允许局域网连接
+mode: rule          # 规则模式
+log-level: info     # 日志级别
 
-# DNS 设置
+# DNS 设置（简单配置）
 dns:
   enable: true
-  ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
-    - 8.8.8.8
-  fallback:
-    - 1.1.1.1
-    - 8.8.4.4
 
 # 代理节点配置
 proxies:
   # VLESS-XHTTP-Reality 节点
-  - name: "vless-xhttp-reality"
+  - name: "vl-xhttp-reality-aws"
     type: vless
-    server: 15.152.222.9
-    port: 12856
-    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    server: 13.212.232.40
+    port: 43286
+    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
     network: xhttp
     tls: true
     udp: true
-    xhttp-opts:
-      path: /dece9f98-9f81-411d-a8dc-f91a29695317-xh
-      mode: auto
     reality-opts:
-      public-key: xPg_Yhx46nXfWEKHmr2eUEA8jPGpTRxo6TIjoM7NGw8
-      short-id: f6553ca4
+      public-key: a4P60KaScMlmn-9Qx0fuv7rXAwfVujWqXIWNlyFjzRA
+      short-id: d40a7f2a
     client-fingerprint: chrome
     servername: www.amd.com
+    xhttp-opts:
+      path: /84a7ec5d-b04c-432a-ae2d-82e0b962dbf2-xh
+      mode: auto
 
   # VLESS-Reality-Vision 节点
-  - name: "vless-reality-vision"
+  - name: "vl-reality-vision-aws"
     type: vless
-    server: 15.152.222.9
-    port: 59975
-    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    server: 13.212.232.40
+    port: 58160
+    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
     network: tcp
+    flow: xtls-rprx-vision
     tls: true
     udp: true
-    flow: xtls-rprx-vision
     reality-opts:
-      public-key: xPg_Yhx46nXfWEKHmr2eUEA8jPGpTRxo6TIjoM7NGw8
-      short-id: f6553ca4
+      public-key: a4P60KaScMlmn-9Qx0fuv7rXAwfVujWqXIWNlyFjzRA
+      short-id: d40a7f2a
     client-fingerprint: chrome
     servername: www.amd.com
 
   # VMess-WS 节点
-  - name: "vmess-ws"
+  - name: "vm-ws-aws"
     type: vmess
-    server: 15.152.222.9
-    port: 65140
-    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
+    server: 13.212.232.40
+    port: 11119
+    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
     alterId: 0
     cipher: auto
     udp: true
     network: ws
     ws-opts:
-      path: /dece9f98-9f81-411d-a8dc-f91a29695317-vm?ed=2048
+      path: /84a7ec5d-b04c-432a-ae2d-82e0b962dbf2-vm?ed=2048
       headers:
         Host: www.bing.com
 
   # Hysteria2 节点
-  - name: "hysteria2"
+  - name: "hy2-aws"
     type: hysteria2
-    server: 15.152.222.9
-    port: 57240
-    password: dece9f98-9f81-411d-a8dc-f91a29695317
+    server: 13.212.232.40
+    port: 29426
+    password: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
     alpn:
       - h3
     sni: www.bing.com
     skip-cert-verify: true
-    up: "30 Mbps"
+    up: "100 Mbps"
     down: "100 Mbps"
 
   # TUIC 节点
-  - name: "tuic"
+  - name: "tuic-aws"
     type: tuic
-    server: 15.152.222.9
-    port: 53719
-    uuid: dece9f98-9f81-411d-a8dc-f91a29695317
-    password: dece9f98-9f81-411d-a8dc-f91a29695317
+    server: 13.212.232.40
+    port: 47222
+    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
+    password: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
     alpn:
       - h3
     congestion-controller: bbr
@@ -99,33 +94,26 @@ proxies:
     sni: www.bing.com
     skip-cert-verify: true
 
-# 代理组配置
+# 代理组配置 - 只保留手动选择
 proxy-groups:
-  # 手动选择节点组
-  - name: "🚀 节点选择"
+  # 手动选择节点
+  - name: "节点选择"
     type: select
     proxies:
-      - vless-xhttp-reality
-      - vless-reality-vision
-      - vmess-ws
-      - hysteria2
-      - tuic
+      - "vl-xhttp-reality-aws"
+      - "vl-reality-vision-aws"
+      - "vm-ws-aws"
+      - "hy2-aws"
+      - "tuic-aws"
       - DIRECT
 
-# 规则配置
+# 规则配置（极简版）
 rules:
-  # 局域网地址直连
-  - DOMAIN-SUFFIX,local,DIRECT
-  - IP-CIDR,192.168.0.0/16,DIRECT
-  - IP-CIDR,10.0.0.0/8,DIRECT
-  - IP-CIDR,172.16.0.0/12,DIRECT
-  - IP-CIDR,127.0.0.0/8,DIRECT
-  
-  # 中国大陆域名直连
-  - GEOSITE,cn,DIRECT
+  # 局域网直连
+  - GEOIP,LAN,DIRECT
   
   # 中国大陆 IP 直连
   - GEOIP,CN,DIRECT
   
   # 其他所有流量走代理
-  - MATCH,🚀 节点选择
+  - MATCH,节点选择

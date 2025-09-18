@@ -1,121 +1,154 @@
-# Clash 配置文件 - 极简版
+# Clash 配置文件
 # 端口设置
-port: 7890          # HTTP 代理端口
-socks-port: 7891    # SOCKS5 代理端口
-mixed-port: 7892    # 混合端口（同时支持 HTTP 和 SOCKS5）
+port: 7890          # HTTP代理端口
+socks-port: 7891    # SOCKS5代理端口
 allow-lan: true     # 允许局域网连接
-mode: rule          # 规则模式
+mode: Rule          # 规则模式
 log-level: info     # 日志级别
 
-# DNS 设置（简单配置）
+# DNS设置
 dns:
   enable: true
+  listen: 0.0.0.0:53
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
+    - 8.8.8.8
+  fallback:
+    - 8.8.8.8
+    - 1.1.1.1
 
 # 代理节点配置
 proxies:
-  # VLESS-XHTTP-Reality 节点
-  - name: "vl-xhttp-reality-aws"
-    type: vless
-    server: 13.212.232.40
-    port: 43286
-    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
+  # Vless-xhttp-reality节点
+  - name: "Vless-xhttp-reality"
+    输入: vless
+    server: 144.24.82.181
+    port: 53554
+    uuid: df71d4a4-24f5-4e95-a22b-fe01903caf5e
     network: xhttp
     tls: true
-    udp: true
-    reality-opts:
-      public-key: a4P60KaScMlmn-9Qx0fuv7rXAwfVujWqXIWNlyFjzRA
-      short-id: d40a7f2a
-    client-fingerprint: chrome
     servername: www.amd.com
+    reality-opts:
+      public-key: rLYmGEq-PFHu8E4oKWgsBv3nl1Z6IdnhSgGs3GkWFG0
+      short-id: b1bcdda7
     xhttp-opts:
-      path: /84a7ec5d-b04c-432a-ae2d-82e0b962dbf2-xh
+      path: /df71d4a4-24f5-4e95-a22b-fe01903caf5e-xh
       mode: auto
+    client-fingerprint: chrome
 
-  # VLESS-Reality-Vision 节点
-  - name: "vl-reality-vision-aws"
-    type: vless
-    server: 13.212.232.40
-    port: 58160
-    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
+  # Vless-tcp-reality节点
+  - name: "Vless-tcp-reality"
+    输入: vless
+    server: 144.24.82.181
+    port: 35164
+    uuid: df71d4a4-24f5-4e95-a22b-fe01903caf5e
     network: tcp
     flow: xtls-rprx-vision
     tls: true
-    udp: true
-    reality-opts:
-      public-key: a4P60KaScMlmn-9Qx0fuv7rXAwfVujWqXIWNlyFjzRA
-      short-id: d40a7f2a
-    client-fingerprint: chrome
     servername: www.amd.com
+    reality-opts:
+      public-key: rLYmGEq-PFHu8E4oKWgsBv3nl1Z6IdnhSgGs3GkWFG0
+      short-id: b1bcdda7
+    client-fingerprint: chrome
 
-  # VMess-WS 节点
-  - name: "vm-ws-aws"
-    type: vmess
-    server: 13.212.232.40
-    port: 11119
-    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
+  # VMess-ws节点
+  - name: "VMess-ws"
+    输入: vmess
+    server: 144.24.82.181
+    port: 23130
+    uuid: df71d4a4-24f5-4e95-a22b-fe01903caf5e
     alterId: 0
     cipher: auto
-    udp: true
     network: ws
     ws-opts:
-      path: /84a7ec5d-b04c-432a-ae2d-82e0b962dbf2-vm?ed=2048
+      path: /df71d4a4-24f5-4e95-a22b-fe01903caf5e-vm?ed=2048
       headers:
         Host: www.bing.com
 
-  # Hysteria2 节点
-  - name: "hy2-aws"
-    type: hysteria2
-    server: 13.212.232.40
-    port: 29426
-    password: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
-    alpn:
-      - h3
+  # Hysteria2节点
+  - name: "Hysteria2"
+    输入: hysteria2
+    server: 144.24.82.181
+    port: 22239
+    password: df71d4a4-24f5-4e95-a22b-fe01903caf5e
     sni: www.bing.com
     skip-cert-verify: true
-    up: "100 Mbps"
-    down: "100 Mbps"
-
-  # TUIC 节点
-  - name: "tuic-aws"
-    type: tuic
-    server: 13.212.232.40
-    port: 47222
-    uuid: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
-    password: 84a7ec5d-b04c-432a-ae2d-82e0b962dbf2
     alpn:
       - h3
+
+  # TUIC节点
+  - name: "TUIC"
+    输入: tuic
+    server: 144.24.82.181
+    port: 22419
+    uuid: df71d4a4-24f5-4e95-a22b-fe01903caf5e
+    password: df71d4a4-24f5-4e95-a22b-fe01903caf5e
     congestion-controller: bbr
     udp-relay-mode: native
     sni: www.bing.com
     skip-cert-verify: true
+    alpn:
+      - h3
 
-# 代理组配置 - 只保留手动选择
+# 代理组配置
 proxy-groups:
-  # 手动选择节点
+  # 手动选择节点组
   - name: "节点选择"
     type: select
     proxies:
-      - "vl-xhttp-reality-aws"
-      - "vl-reality-vision-aws"
-      - "vm-ws-aws"
-      - "hy2-aws"
-      - "tuic-aws"
-      - "anytls-aws"
-      - "any-reality-aws"
+      - "Vless-xhttp-reality"
+      - "Vless-tcp-reality"
+      - "VMess-ws"
+      - "Hysteria2"
+      - "TUIC"
       - DIRECT
 
-# 规则配置（极简版）
+# 规则配置
 rules:
   # 局域网直连
-  - GEOIP,LAN,DIRECT
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
   
-  # 中国大陆 IP 直连
+  # 中国大陆网站直连
+  - DOMAIN-SUFFIX,cn,DIRECT
+  - DOMAIN-KEYWORD,-cn,DIRECT
+  - DOMAIN-SUFFIX,baidu.com,DIRECT
+  - DOMAIN-SUFFIX,taobao.com,DIRECT
+  - DOMAIN-SUFFIX,jd.com,DIRECT
+  - DOMAIN-SUFFIX,qq.com,DIRECT
+  - DOMAIN-SUFFIX,weixin.com,DIRECT
+  - DOMAIN-SUFFIX,bilibili.com,DIRECT
+  - DOMAIN-SUFFIX,alipay.com,DIRECT
+  - DOMAIN-SUFFIX,163.com,DIRECT
+  - DOMAIN-SUFFIX,126.com,DIRECT
+  - DOMAIN-SUFFIX,douyin.com,DIRECT
+  - DOMAIN-SUFFIX,zhihu.com,DIRECT
+  - DOMAIN-SUFFIX,weibo.com,DIRECT
+  
+  # 海外网站走代理
+  - DOMAIN-SUFFIX,google.com,节点选择
+  - DOMAIN-SUFFIX,youtube.com,节点选择
+  - DOMAIN-SUFFIX,facebook.com,节点选择
+  - DOMAIN-SUFFIX,twitter.com,节点选择
+  - DOMAIN-SUFFIX,instagram.com,节点选择
+  - DOMAIN-SUFFIX,telegram.org,节点选择
+  - DOMAIN-SUFFIX,github.com,节点选择
+  - DOMAIN-SUFFIX,netflix.com,节点选择
+  - DOMAIN-SUFFIX,openai.com,节点选择
+  - DOMAIN-SUFFIX,anthropic.com,节点选择
+  - DOMAIN-KEYWORD,google,节点选择
+  - DOMAIN-KEYWORD,youtube,节点选择
+  - DOMAIN-KEYWORD,facebook,节点选择
+  - DOMAIN-KEYWORD,twitter,节点选择
+  
+  # 中国大陆IP直连
   - GEOIP,CN,DIRECT
   
-  # 其他所有流量走代理
+  # 最终规则：其他所有流量走代理
   - MATCH,节点选择
